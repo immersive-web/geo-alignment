@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoaligned Camera Demo</title>
+  <script>
+  var testMode = false;
+  var geoPosition = null;
+  var isNoPosition = false;
+  var absOrientation = null;
+  var isNoOrientation = false;
+  var quaternion;
+
+  function init(){
+    // check geolocation & orientation sensor support
+    checkApi();
+    if (window.OrientationSensor) {
+      initOrientation();
+    }
+    updateTestMode();
+    clearAll();
+
+    // stream to video
+    window.navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: true })
+    .then(stream => {
+      // connect stream
+      var video = document.getElementById('myVideo');
+      video.srcObject = stream;
+      video.onloadedmetadata = (e) => {
+        // play stream
+        video.play();
+
+        // set canvas size
+        var canvas = document.getElementById('myCanvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      };
+    })
+    .catch( (e) => {
+      alert(e);
+    });
+  }
+
+  function checkApi() {
+    // geolocation api
+    if (navigator.geolocation) {
+      var location = document.getElementById('locationApi');
+      location.checked = true;
+    }
+
+    // orientation api
+    if (window.OrientationSensor) {
+      var orientation = document.getElementById('orientationApi');
+      orientation.checked = true;
+    }
+  }
+
+  function displayMessage(msg) {
+    var message = document.getElementById('myMessage');
+    message.innerHTML = msg;
+  }
+
+  function snapshot(){
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext("2d");
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    var video = document.getElementById('myVideo');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // set date
+    addMessage(new Date().toString());
+
+    if (testMode) { // test
+      var loc = {coords: {latitude: 51.543 + 0.001 * Math.random(),
+        longitude: -0.123 + 0.001 * Math.random(), altitude: 34.567 + 2 * Math.random()}};
+        var quat = calcQuaternion({yaw: Math.random() * 360, pitch: 0, roll: 0});
+        showGeoalignment(loc, quat);
+      } else { // real world
+        // clear geoalignment
+        geoPosition = null;
+        absOrientation = null;
+
+        // get geolocation
+        getPosition(setPosition);
+
+        // get orientation
+        getOrientation();
+      }
+    }
+
+    function getPosition(callback) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(callback, showError);
+      }
+    }
+
+    function setPosition(position) {
+      geoPosition = position;
+      isNoPosition = false;
+      if (absOrientation != null || !window.OrientationSensor || isNoOrientation) {
+        showGeoalignment(geoPosition, absOrientation);
+      }
+    }
+
+    function initOrientation() {
+      const options = { frequency: 60, referenceFrame: 'device' };
+      const sensor = new AbsoluteOrientationSensor(options);
+
+      // request permissions
+      Promise.all([navigator.permissions.query({ name: "accelerometer" }),
+      navigator.permissions.query({ name: "magnetometer" }),
+      navigator.permissions.query({ name: "gyroscope" })])
+      .then(results => {
+        if (results.every(result => result.state === "granted")) {
+          // add event listeners
+          sensor.addEventListener('reading', () => {
+            quaternion = sensor.quaternion;
+            isNoOrientation = false;
+          });
+          sensor.addEventListener('error', error => {
+            if (event.error.name == 'NotReadableError') {
+              var message = document.getElementById('myMessage');
+              message.innerHTML = 'Orientation sensor not available.';
+              isNoOrientation = true;
+            }
+          });
+
+          // start
+          sensor.start();
+        } else {
+          var message = document.getElementById('myMessage');
+          message.innerHTML = 'No permissions for AbsoluteOrientationSensor.';
+          isNoOrientation = true;
+        }
+      });
+    }
+
+    function getOrientation() {
+      if (window.OrientationSensor) {
+        setOrientation(quaternion); // quaternion set by event listener
+      }
+    }
+
+    function setOrientation(orientation) {
+      absOrientation = orientation;
+      if (geoPosition != null || !navigator.geolocation || isNoPosition) {
+        showGeoalignment(geoPosition, absOrientation);
+      }
+    }
+
+    function showGeoalignment(position, orientation) {
+      var msg = '';
+      if (position) {
+        msg += 'lat: ' + position.coords.latitude + ', lng: ' + position.coords.longitude + ', alt: ' + position.coords.altitude;
+      }
+      if (orientation) {
+        if (msg != '') {
+          msg += ', ';
+        }
+        msg += 'Q (x: ' + orientation[0] + ', y: ' + orientation[1] + ', z: ' + orientation[2] + ', w: ' + orientation[3] + ')';
+      }
+      addMessage(msg);
+    }
+
+    function addMessage(text) {
+      var element = document.getElementById('myHistory');
+      element.innerHTML += text + '<br>';
+    }
+
+    function clearAll() {
+      // clear history
+      var element = document.getElementById('myHistory');
+      element.innerHTML = '';
+
+      // clear error
+      element = document.getElementById('myMessage');
+      element.innerHTML = '&nbsp;';
+    }
+
+    function showError(error) {
+      var message = document.getElementById('myMessage');
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+        message.innerHTML = "User denied the request for Geolocation."
+        isNoPosition = true;
+        break;
+        case error.POSITION_UNAVAILABLE:
+        message.innerHTML = "Location information is unavailable."
+        isNoPosition = true;
+        break;
+        case error.TIMEOUT:
+        message.innerHTML = "The request to get user location timed out."
+        isNoPosition = true;
+        break;
+        case error.UNKNOWN_ERROR:
+        message.innerHTML = "An unknown error occurred."
+        isNoPosition = true;
+        break;
+      }
+    }
+
+    function updateTestMode() {
+      var element = document.getElementById('testMode');
+      if (element) {
+        testMode = element.checked;
+      }
+    }
+
+    const degToRad = (x) => Math.PI * x / 180;
+
+    function calcQuaternion(angles) {
+      var hy = degToRad(angles.yaw * 0.5);
+      var hp = degToRad(angles.pitch * 0.5);
+      var hr = degToRad(angles.roll * 0.5);
+
+      var cy = Math.cos(hy);
+      var sy = Math.sin(hy);
+      var cp = Math.cos(hp);
+      var sp = Math.sin(hp);
+      var cr = Math.cos(hr);
+      var sr = Math.sin(hr);
+
+      // q(x,y,z,w)
+      return [sr * cp * cy - cr * sp * sy, cr * sp * cy + sr * cp * sy,
+        cr * cp * sy - sr * sp * cy, cr * cp * cy + sr * sp * sy];
+      }
+      </script>
+      <style>
+      .contain {
+        max-width: 100%;
+      }
+      .container {
+        position:relative;
+      }
+      .container video {
+        position:relative;
+        z-index:0;
+      }
+      .l-overlay {
+        position:absolute;
+        top:0;
+        left:0;
+        z-index:1;
+        color:white;
+      }
+      .r-overlay {
+        position:absolute;
+        top:0;
+        right:0;
+        z-index:1;
+        color:white;
+      }
+      .caption {
+        padding:0 16px;
+      }
+      </style>
+    </head>
+    <body onload="init()">
+      <table>
+        <tr>
+          <td>
+            <div class="container">
+              <video id="myVideo" autoplay controls muted class="contain"></video>
+              <div class="l-overlay caption"><h3>Live</h3></div>
+            </div>
+          </td>
+          <td>
+            <div class="container">
+              <canvas id="myCanvas" class="contain"></canvas>
+              <div class="r-overlay caption"><h3>Snapshot</h3></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button onclick="snapshot()">Snapshot</button>
+            <button onclick="clearAll()">Clear</button>
+            <label>Test Mode</label><input type="checkbox" id="testMode" onclick="updateTestMode()" unchecked>
+          </td>
+          <td>
+            <div id="myMessage"></div>
+          </td>
+        </tr>
+      </table>
+      API:
+      <label>Location</label><input type="checkbox" id="locationApi" unchecked disabled>
+      <label>Orientation</label><input type="checkbox" id="orientationApi" unchecked disabled>
+      <div id="myHistory"></div>
+    </body>
+    </html>
