@@ -19,9 +19,11 @@ Geo-alignment is defined by location and orientation with respect to the Earth's
 Three key issues have been identified:
 
  1. **Agnostic interface**
-Geo-alignment is a [high-level sensor](https://www.w3.org/TR/motion-sensors/#highlevel-sensors) interface which should be agnostic of the underlying [low-level sensors](https://www.w3.org/TR/motion-sensors/#low-level-sensors) since position and orientation can be calculated by many different means. Position can be determined from visual, inertial or satellite navigation data and this is reflected in the [Geolocation API](https://www.w3.org/TR/geolocation/). Orientation should be handled in a similar way.
+ \
+ Geo-alignment is a [high-level sensor](https://www.w3.org/TR/motion-sensors/#highlevel-sensors) interface which should be agnostic of the underlying [low-level sensors](https://www.w3.org/TR/motion-sensors/#low-level-sensors) since position and orientation can be calculated by many different means. Position can be determined from visual, inertial or satellite navigation data and this is reflected in the [Geolocation API](https://www.w3.org/TR/geolocation/). Orientation should be handled in a similar way.
 
  1. **Capability**
+ \
  Geo-alignment can be determined only if three elements are present and correct:
 
     1. **User agent support** in the chosen web client. If this is not supported, sensor information cannot be accessed by the browser to calculate position and/or orientation.
@@ -31,6 +33,7 @@ Geo-alignment is a [high-level sensor](https://www.w3.org/TR/motion-sensors/#hig
     1. **Suitable sensors** to provide position and orientation data. If less than the required number of sensors are available, geo-alignment calculations may be less accurate or completely impossible.
 
  1. **Accuracy**
+ \
   Correct assessment of geo-alignment accuracy is critical since identified use cases require sufficient precision to yield a successful result. For example, Augmented Reality (AR) use cases need high accuracy geo-alignment to correctly overlay virtual assets on a video stream. Mobile devices may lack this accuracy and sufficient information should be provided in the API to determine the quality of geo-alignment available to the user agent so best use can be made of the available data.
 
 #### Gap Analysis
