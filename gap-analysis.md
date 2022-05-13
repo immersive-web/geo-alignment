@@ -11,6 +11,7 @@ Geo-alignment is defined by location and orientation with respect to the Earth's
 | [Geolocation API](https://www.w3.org/TR/geolocation/) | Proposed Recommendation | [Geolocation interface and callbacks](https://www.w3.org/TR/geolocation/#geolocation_interface) |
 | [Orientation Sensor](https://www.w3.org/TR/orientation-sensor/) | Working Draft | [OrientationSensor interface](https://www.w3.org/TR/orientation-sensor/#orientationsensor-interface) |
 | [Permissions](https://www.w3.org/TR/permissions/) | Working Draft | [Permissions interface](https://www.w3.org/TR/permissions/#permissions-interface) |
+| [DeviceOrientation Event](https://www.w3.org/TR/orientation-event/)| Working Draft | [DeviceOrientationEvent](https://www.w3.org/TR/orientation-event/#idl-index)|
 
 [W3C Devices and Sensors (DAS)](https://www.w3.org/das/) Working Group published a roadmap giving a useful [overview of W3C sensor document status](https://www.w3.org/das/roadmap) including motion sensors.
 
@@ -66,7 +67,7 @@ Several omissions for geo-alignment have been identified in the current W3C APIs
 
  1. **Yaw, pitch and roll angles**
  \
-  [Orientation sensor interface](https://w3c.github.io/orientation-sensor/#orientationsensor-interface) does not include yaw, pitch and roll angles which represent rotations about the up, left and front axes respectively of an object. See [w3c/orientation-sensor#43](https://github.com/w3c/orientation-sensor/issues/43)
+  [Orientation sensor interface](https://w3c.github.io/orientation-sensor/#orientationsensor-interface) does not include yaw, pitch and roll angles which represent rotations about the up, left and front axes respectively of an object. See w3c/orientation-sensor#43
 
 #### Convenience API
 
