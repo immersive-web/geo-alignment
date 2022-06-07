@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Orientation Event Demo</title>
+  </head>
+  <body>
+  <table>
+  	<tr>
+  	<td colspan="3">
+      <label for="api">DeviceOrientation Event:</label>
+    </td>
+  	<td>
+  	  <input type="checkbox" id="api" unchecked disabled>
+  	</td>
+    </tr>
+  	<tr>
+  	<td colspan="3">
+      <button id="eventButton" onclick="toggleEvent()">Absolute</button>
+  	</td>
+  	<td>
+  	  <input type="checkbox" id="eventType" disabled>
+  	</td>
+    </tr>
+  	<tr>
+  	<td>
+      <label for="pitch">Pitch:</label>
+    </td>
+  	<td>
+      <input type="text" id="pitch" size=3 readonly>
+    </td>
+  	<td>
+      <label for="roll">Roll:</label>
+    </td>
+  	<td>
+      <input type="text" id="roll" size=3 readonly>
+    </td>
+    </tr>
+    <tr>
+    <td>
+      <label for="yaw">Yaw:</label>
+    </td>
+  	<td>
+      <input type="text" id="yaw" size=3 readonly>
+    </td>
+  	<td>
+  	  <label for="absolute">Absolute:</label>
+    </td>
+  	<td>
+  	  <input type="checkbox" id="absolute" unchecked disabled>
+  	</td>
+  	</tr>
+  	</table>
+    <script>
+      const api = document.getElementById("api");
+      const eventType = document.getElementById("eventType");
+      const yaw = document.getElementById("yaw");
+      const pitch = document.getElementById("pitch");
+      const roll = document.getElementById("roll");
+      const absolute = document.getElementById("absolute");
+      var activeEvent = "deviceorientationabsolute";
+      var inactiveEvent = "deviceorientation";
+      window.addEventListener(activeEvent, displayEvent);
+      api.checked = (window.DeviceOrientationEvent != undefined);
+      eventType.checked = true;
+      
+      function toggleEvent() {
+        window.removeEventListener(activeEvent, displayEvent);
+        var swapEvent = activeEvent;
+        activeEvent = inactiveEvent;
+        inactiveEvent = swapEvent;
+      	eventType.checked = !eventType.checked;
+        window.addEventListener(activeEvent, displayEvent);
+      }
+      
+      function displayEvent(e) {
+        yaw.value = Math.round(e.alpha);
+        pitch.value = Math.round(e.beta);
+        roll.value = Math.round(e.gamma);
+        absolute.checked = e.absolute;
+      }
+    </script>
+  </body>
+</html>
