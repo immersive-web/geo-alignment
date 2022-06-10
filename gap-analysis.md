@@ -11,13 +11,14 @@ Geo-alignment is defined by location and orientation with respect to the Earth's
 | [Geolocation API](https://www.w3.org/TR/geolocation/) | Proposed Recommendation | [Geolocation interface and callbacks](https://www.w3.org/TR/geolocation/#geolocation_interface) |
 | [Orientation Sensor](https://www.w3.org/TR/orientation-sensor/) | Working Draft | [OrientationSensor interface](https://www.w3.org/TR/orientation-sensor/#orientationsensor-interface) |
 | [Permissions](https://www.w3.org/TR/permissions/) | Working Draft | [Permissions interface](https://www.w3.org/TR/permissions/#permissions-interface) |
+| [Generic Sensor API](https://www.w3.org/TR/generic-sensor/) | Candidate Recommendation Draft | [Sensor](https://www.w3.org/TR/generic-sensor/#the-sensor-interface)<br />[SensorErrorEvent](https://www.w3.org/TR/generic-sensor/#the-sensor-error-event-interface) |
 | [DeviceOrientation Event](https://www.w3.org/TR/orientation-event/)| Working Draft | [DeviceOrientationEvent](https://www.w3.org/TR/orientation-event/#idl-index)|
 
 [W3C Devices and Sensors (DAS)](https://www.w3.org/das/) Working Group published a roadmap giving a useful [overview of W3C sensor document status](https://www.w3.org/das/roadmap) including motion sensors.
 
 #### Key Issues
 
-Three key issues have been identified:
+Several key issues have been identified:
 
  1. **Agnostic interface**
  \
@@ -37,6 +38,14 @@ Three key issues have been identified:
  \
   Correct assessment of geo-alignment accuracy is critical since identified use cases require sufficient precision to yield a successful result. For example, Augmented Reality (AR) use cases need high accuracy geo-alignment to correctly overlay virtual assets on a video stream. Mobile devices may lack this accuracy and sufficient information should be provided in the API to determine the quality of geo-alignment available to the user agent so best use can be made of the available data.
 
+ 1. **Privacy & security**
+ \
+  Data from accelerometer, magnetometer and gyroscope sensors could be combined using inertial navigation techniques to track a user's movements from a known location such as that of a Wifi or Bluetooth device so proper security permissions should be enforced. Privacy and security issues are discussed in the [DeviceOrientation Event](https://www.w3.org/TR/orientation-event/#security-and-privacy) and [Generic Sensor](https://www.w3.org/TR/generic-sensor/#security-and-privacy) documents.
+
+ 1. **Prototype evaluation**
+ \
+  Experimental features proposed for the [DeviceOrientationEvent interface](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent#properties) include `webkitCompassHeading` and `webkitCompassAccuracy`. Such prototypes should be evaluated with a view to inclusion in any proposed geo-alignment interface.
+
 #### Gap Analysis
 
 Several omissions for geo-alignment have been identified in the current W3C APIs:
@@ -48,6 +57,10 @@ Several omissions for geo-alignment have been identified in the current W3C APIs
  1. **Geo-alignment permission**
  \
    [Standardised permissions](https://w3c.github.io/permissions-registry/#registry-table-of-standardized-permissions) in the [Permissions Registry](https://w3c.github.io/permissions-registry) include `geolocation` to allow position data access. No entry exists to request permission for `orientation` (or individual sensors such as [accelerometer](https://www.w3.org/TR/accelerometer/#accelerometer-interface), [magnetometer](https://www.w3.org/TR/magnetometer/#magnetometer-interface) and [gyroscope](https://www.w3.org/TR/gyroscope/#gyroscope-interface)) in the [provisional permissions](https://w3c.github.io/permissions-registry/#registry-table-of-provisional-permissions). Proper consideration should be given to whether `orientation` (or `motion`) is a [powerful feature](https://www.w3.org/TR/permissions/#dfn-powerful-feature) with and without `geolocation`.
+
+ 1. **Required permission**
+ \
+   The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) requires no permissions prior to accessing device orientation details despite a [`RequestPermission` method](https://www.w3.org/TR/orientation-event/#dom-deviceorientationevent-requestpermission) in the interface. This is also inconsistent with the [OrientationSensor model](https://www.w3.org/TR/orientation-sensor/#model) which is a [policy-controlled feature](https://www.w3.org/TR/permissions-policy/#policy-controlled-feature) requiring permissions.
 
  1. **Permission Registry**
  \
@@ -63,11 +76,19 @@ Several omissions for geo-alignment have been identified in the current W3C APIs
 
  1. **Geo-aligned orientation**
  \
-  [Orientation sensor interface](https://w3c.github.io/orientation-sensor/#orientationsensor-interface) does not indicate whether or not orientation is geo-aligned. This is inconsistent with the [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent).
+  [Orientation sensor interface](https://w3c.github.io/orientation-sensor/#orientationsensor-interface) does not indicate whether or not orientation is geo-aligned. This is inconsistent with the [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) which includes the [`absolute` attribute](https://www.w3.org/TR/orientation-event/#dom-deviceorientationevent-absolute) to indicate geo-alignment.
 
  1. **Yaw, pitch and roll angles**
  \
   [Orientation sensor interface](https://w3c.github.io/orientation-sensor/#orientationsensor-interface) does not include yaw, pitch and roll angles which represent rotations about the up, left and front axes respectively of an object. See w3c/orientation-sensor#43
+
+ 1. **Sensor options**
+ \
+  The [OrientationSensor interface](https://www.w3.org/TR/orientation-sensor/#orientationsensor-interface) includes the `SensorOptions` attribute to control sampling frequency. No such options are provided by [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) which updates on orientation change events rather than at a given frequency and this is inconsistent.
+
+ 1. **Interface deprecation**
+ \
+  The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) has been deprecated by at least one web browser developer (Firefox 101.0) in such a way that the interface is present but generates no events. This is difficult to detect programmatically as no error is reported.
 
 #### Convenience API
 
