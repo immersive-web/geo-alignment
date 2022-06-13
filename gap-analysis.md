@@ -20,13 +20,13 @@ Geo-alignment is defined by location and orientation with respect to the Earth's
 
 Web Platform Test results snapshot on 13 June 2022 - latest results available via link in Path column. MDN results also include mobile browsers.
 
-| Path | Chrome | Edge | Firefox | Safari | MDN |
+| Path | Chrome | Edge | Firefox | Safari | MDN Results |
 | -- | -- | -- | -- | -- | -- |
 | [geolocation-API](https://wpt.fyi/results/geolocation-API?label=experimental&label=master&aligned) | 43 / 67 |	44 / 67 |	31 / 67 |	31 / 67 | [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API#browser_compatibility) |
-| [orientation-sensor](https://wpt.fyi/results/orientation-sensor?label=experimental&label=master&aligned) | 121 / 123 |	73 / 123 |	16 / 123 |	16 / 123 | [OrientationSensor](https://developer.mozilla.org/en-US/docs/Web/API/OrientationSensor#browser_compatibility) |
+| [orientation-sensor](https://wpt.fyi/results/orientation-sensor?label=experimental&label=master&aligned) | 121 / 123 |	73 / 123 |	16 / 123 |	16 / 123 | [OrientationSensor](https://developer.mozilla.org/en-US/docs/Web/API/OrientationSensor#browser_compatibility)<br />[RelativeOrientationSensor](https://developer.mozilla.org/en-US/docs/Web/API/RelativeOrientationSensor#browser_compatibility)<br />[AbsoluteOrientationSensor](https://developer.mozilla.org/en-US/docs/Web/API/AbsoluteOrientationSensor#browser_compatibility) |
 | [permissions](https://wpt.fyi/results/permissions?label=experimental&label=master&aligned) | 119 / 125 |	120 / 125 |	82 / 125 |	79 / 125 | [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API#browser_compatibility) |
 | [generic-sensor](https://wpt.fyi/results/generic-sensor?label=experimental&label=master&aligned) | 49 / 49 |	49 / 49 |	5 / 49 |	5 / 49 | [Sensor API](https://developer.mozilla.org/en-US/docs/Web/API/Sensor_APIs#browser_compatibility) |
-| [orientation-event](https://wpt.fyi/results/orientation-event?label=experimental&label=master&aligned) | 140 / 144 |	108 / 144 |	77 / 144 |	23 / 144 | [DeviceOrientation](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent#browser_compatibility) |
+| [orientation-event](https://wpt.fyi/results/orientation-event?label=experimental&label=master&aligned) | 140 / 144 |	108 / 144 |	77 / 144 |	23 / 144 | [DeviceOrientation](https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent#browser_compatibility)<br />[deviceorientation](https://developer.mozilla.org/en-US/docs/Web/API/Window/deviceorientation_event#browser_compatibility)<br />[deviceorientationabsolute](https://developer.mozilla.org/en-US/docs/Web/API/Window/deviceorientationabsolute_event#browser_compatibility) |
 
 #### Key Issues
 
