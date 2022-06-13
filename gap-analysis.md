@@ -86,9 +86,13 @@ Several omissions for geo-alignment have been identified in the current W3C APIs
  \
   The [OrientationSensor interface](https://www.w3.org/TR/orientation-sensor/#orientationsensor-interface) includes the `SensorOptions` attribute to control sampling frequency. No such options are provided by [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) which updates on orientation change events rather than at a given frequency and this is inconsistent.
 
- 1. **Interface deprecation**
+ 1. **Event support**
  \
-  The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) has been deprecated by at least one web browser developer (Firefox 101.0) in such a way that the interface is present but generates no events. This is difficult to detect programmatically as no error is reported.
+  Few implementations of the [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) support geo-alignment since only Chrome (v102) currently implements the [`deviceorientationabsolute` event](https://www.w3.org/TR/orientation-event/#deviceorientationabsolute). Support for this event must be explicitly checked as no error is (correctly) reported by `addEventListener` and no events are generated if the user agent does not support this feature which is a pitfall for developers.
+
+ 1. **Missing sensors**
+ \
+  The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) has no explicit way of reporting that a web device lacks the required sensors to generate geo-aligned orientation data. Either no events are generated as there are no valid data, or events are generated with spurious data.
 
 #### Convenience API
 
