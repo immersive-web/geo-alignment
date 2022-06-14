@@ -62,7 +62,7 @@
       window.addEventListener(activeEvent, displayEvent);
       api.checked = (window.DeviceOrientationEvent != undefined);
       eventType.checked = true;
-      
+
       function toggleEvent() {
         window.removeEventListener(activeEvent, displayEvent);
         var swapEvent = activeEvent;
@@ -71,11 +71,11 @@
       	eventType.checked = !eventType.checked;
         window.addEventListener(activeEvent, displayEvent);
       }
-      
+
       function displayEvent(e) {
-        yaw.value = Math.round(e.alpha);
-        pitch.value = Math.round(e.beta);
-        roll.value = Math.round(e.gamma);
+        yaw.value = (e.alpha == null ? "" : Math.round(e.alpha));
+        pitch.value = (e.beta == null ? "" : Math.round(e.beta));
+        roll.value = (e.gamma == null ? "" : Math.round(e.gamma));
         absolute.checked = e.absolute;
       }
     </script>
