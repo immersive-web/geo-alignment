@@ -104,7 +104,7 @@ Several omissions for geo-alignment have been identified in the current W3C APIs
 
  1. **Missing sensors**
  \
-  The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) has no explicit way of reporting that a web device lacks the required sensors to generate geo-aligned orientation data. Either no events are generated as there are no valid data, or events are generated with spurious data.
+  The [DeviceOrientationEvent interface](https://www.w3.org/TR/orientation-event/#deviceorientationevent) has no explicit way of reporting that a web device lacks the required sensors to generate geo-aligned orientation data. Either no events are generated as there are no valid data, or events are generated with `null` data.
 
 #### Convenience API
 
