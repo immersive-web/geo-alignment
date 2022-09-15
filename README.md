@@ -4,6 +4,7 @@ Contacts:
 
 * [Jan-Erik Vinje](https://github.com/janerivi)
 * [Rob Smith](https://github.com/rjksmith)
+* [Mikel Salazar](https://github.com/MikelSalazar)
 
 The goal of this repository is to try to discuss one approach to facilitating geo-spatial AR in the context of immersive web, specifically the feasibility and utility of adding a "geoalignment" feature to the WebXR spec.
 
